@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FaceTutorial"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="960">
+        Title="DashBoard" Height="700" Width="960" Background="DeepSkyBlue">
 	<Grid x:Name="BackPanel">
 		<Image x:Name="FacePhoto" Stretch="Uniform" Margin="0,0,0,50" MouseMove="FacePhoto_MouseMove" />
 		<DockPanel DockPanel.Dock="Bottom">

@@ -1,34 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Azure.CognitiveServices.Vision.Face;
 using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
+using Microsoft.Win32;
 
 namespace FaceTutorial
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
+    /// Microsoft Cognitive API™
     /// </summary>
     public partial class MainWindow : Window
     {
+ 
         // Subscription Key for API
         const string subscriptionKey = "097b38e0515441079ba8f42f5605a241";
         const string baseUri = "https://westcentralus.api.cognitive.microsoft.com/face/v1.0";
         readonly IFaceClient faceClient = new FaceClient(
-            new ApiKeyServiceClientCredentials(subscriptionKey),
-            new System.Net.Http.DelegatingHandler[] {});
+            new ApiKeyServiceClientCredentials(subscriptionKey));
 
         // list of detected faces
         IList<DetectedFace> faceList;
@@ -36,6 +35,9 @@ namespace FaceTutorial
         String[] faceDescriptions;
         // resize factor for displayed image
         double resizeFactor;
+        
+
+
 
         public MainWindow()
         {
@@ -57,7 +59,7 @@ namespace FaceTutorial
         private async void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
             // Get image file to scan from user
-            var openDlg = new Microsoft.Win32.OpenFileDialog();
+            var openDlg = new OpenFileDialog();
 
             openDlg.Filter = "JPEG Image(*.jpg|*.jpg";
             bool? result = openDlg.ShowDialog(this);
@@ -167,22 +169,31 @@ namespace FaceTutorial
                     mouseXY.Y >= top && mouseXY.Y <= top + height)
                 {
                     faceDescriptionStatusBar.Text = faceDescriptions[i];
+
+                    Window1 winObject = new Window1();
+                    var faceDescription = TextDataFormat.CommaSeparatedValue.ToString();
+                    faceDescription = faceDescriptions[i];
+                    winObject.TextB1.Text = faceDescription;
+                    winObject.ShowDialog();
                     mouseOverFace = true;
                     break;
                 }
             }
+            
 
             // String to display when the mouse is not over a face rectangle
             if (!mouseOverFace)
                 faceDescriptionStatusBar.Text =
                     "Place the mouse pointer over a face to see the face description.";
         }
+        
+        
         // Upload the image file and calls DetectWithStreamAsync
         private async Task<IList<DetectedFace>> UploadAndDetectFaces(string imageFilePath)
         {
             // The list of Face attributes to return.
             IList<FaceAttributeType> faceAttributes =
-                new FaceAttributeType[]
+                new[]
                 {
                     FaceAttributeType.Gender, FaceAttributeType.Age,
                     FaceAttributeType.Smile, FaceAttributeType.Emotion,
